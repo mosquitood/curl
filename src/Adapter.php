@@ -141,6 +141,14 @@ abstract class Adapter{
 
     protected $authorizationToken;
 
+    /**
+     * 内部域名 
+     *
+     * @var array 
+     */ 
+
+    protected $internalUrlMap = [];
+
 
     /**
      * HTTP Response 
@@ -358,6 +366,19 @@ abstract class Adapter{
     {
         $this->requestData = $data;
         return $this; 
+    }
+
+    public function setInternalUrlMap($map = array())
+    {
+        $this->internalUrlMap = $map;
+        return $this;
+    }
+
+    public function getInternalUrl($url)
+    {
+        return isset($this->internalUrlMap[$url]) && $this->internalUrlMap[$url] 
+            ? $this->internalUrlMap[$url]
+            : $url;
     }
 
     /**

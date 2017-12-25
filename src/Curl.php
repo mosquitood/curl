@@ -184,12 +184,13 @@ class Curl extends Adapter{
     {
         $matches = parse_url($url);
         $host    = $matches['host'];
+        $internalUrl = $this->getInternalUrl($url);
         if($this->hostIp){
             array_push($this->header, 'Host: ' . $host);
-            $url = str_replace($host, $this->hostIp, $url);
+            $internalUrl = str_replace($host, $this->hostIp, $internalUrl);
         }
         $ch = curl_init ();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_URL, $internalUrl);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
@@ -402,6 +403,7 @@ class Curl extends Adapter{
     protected function parseResponse($response, $ch)
     {
         $sourceResponse = $response;
+        $responseHeader = '';
         if(!(strpos($response, "\r\n\r\n") === false)) {
             list($responseHeader, $response) = explode("\r\n\r\n", $response, 2);
             while(strtolower(trim($responseHeader)) === 'http/1.1 100 continue'){
